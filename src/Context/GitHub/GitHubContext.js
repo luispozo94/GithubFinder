@@ -1,5 +1,5 @@
 import { createContext , useReducer} from "react"
-import gitHubReducer from "./GitHubReducer"
+import GitHubReducer from "./GitHubReducer"
 
 //assign the context to a variable
 const GitHubContext = createContext()
@@ -15,7 +15,7 @@ export const GitHubProvider = ({ children }) => {
     loading: true,
   }
 //destructure the state by passing the initial state and dispatch from the reducer
-  const [state, dispatch] = useReducer(gitHubReducer, initialState)
+  const [state, dispatch] = useReducer(GitHubReducer, initialState)
 
   const fetchUsers = async () => {
 		const response = await fetch(`${GITHUB_URL}/users`, {

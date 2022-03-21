@@ -9,7 +9,7 @@ const UserResult = () => {
 
 	useEffect(() => {
 		fetchUsers();
-	}, []);
+	},[]);
 
 	if (!loading) {
 		return (
