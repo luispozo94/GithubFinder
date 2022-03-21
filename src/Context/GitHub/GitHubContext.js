@@ -12,24 +12,36 @@ export const GitHubProvider = ({ children }) => {
   //declare the initial state of users and a loading spinner
   const initialState = { 
     users: [],
-    loading: true,
+    loading: false,
   }
 //destructure the state by passing the initial state and dispatch from the reducer
   const [state, dispatch] = useReducer(GitHubReducer, initialState)
 
-  const fetchUsers = async () => {
-		const response = await fetch(`${GITHUB_URL}/users`, {
+  //created a func to get search results
+  const searchUsers = async (text) => {
+    setLoadingState()
+    const params = new URLSearchParams({
+      q: text,
+    })
+
+		const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
 			headers: {
 				Authorization: `token ${GITHUB_TOKEN}`,
 			},
 		});
-		const data = await response.json();
+    const { items } = await response.json()//destructuring the items from the response
+    
 		//dispatch the action to the reducer,this will update the state
-		dispatch({ type: 'FETCH_USERS', payload: data });
-	};
-
+		dispatch({ type: 'FETCH_USERS', payload: items });
+  };
+  
+  //Clear users from state
+  const clearUsers = () => dispatch({ type: 'CLEAR_USERS' });
+  //Set loading state to true
+  const setLoadingState = () => dispatch({ type: 'SET_LOADING' });
+  
   //returns the CONTEXT as a PROVIDER which takes the value or the state you want to pass by also passing the children
-  return <GitHubContext.Provider  value={{users:state.users,loading:state.loading, fetchUsers}}>
+  return <GitHubContext.Provider  value={{users:state.users,loading:state.loading, searchUsers, clearUsers}}>
   {children}
   </GitHubContext.Provider>
 }
