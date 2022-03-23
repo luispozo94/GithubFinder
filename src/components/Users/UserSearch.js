@@ -1,25 +1,29 @@
 import React, { useState, useContext } from 'react';
 import GitHubContext from '../../Context/GitHub/GitHubContext';
 import AlertContext from '../../Context/Alert/AlertContext';
+import { searchUsers } from '../../Context/GitHub/GitHubActions';
 
+//UserSearch func is fetching the users from the API 
 const UserSearch = () => {
 	const [text, setText] = useState('');
 
 	//accessing the context
-	const { users, searchUsers, clearUsers } = useContext(GitHubContext);
+	const { users, dispatch } = useContext(GitHubContext);
 
-	const { setAlert } = useContext(AlertContext);//importing the context
+	const { setAlert } = useContext(AlertContext); //accessing the context
 
 	const handleChange = (e) => setText(e.target.value);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		//simple validation
 		if (text === '') {
 			setAlert('Please, enter something to search', 'error');
 		} else {
-			searchUsers(text);
+			dispatch({ type: 'SET_LOADING' });//dispatching from the component to the reducer
+			const users = await searchUsers(text);
+			dispatch({ type: 'FETCH_USERS', payload: users });
 			setText('');
 		}
 	};
@@ -49,7 +53,7 @@ const UserSearch = () => {
 			</div>
 			{users.length > 0 && (
 				<div>
-					<button onClick={clearUsers} className="btn btn-ghost btn-lg">
+					<button onClick={() => dispatch({type:'CLEAR_USERS'})} className="btn btn-ghost btn-lg">
 						Clear
 					</button>
 				</div>

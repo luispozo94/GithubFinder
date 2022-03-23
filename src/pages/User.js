@@ -1,17 +1,27 @@
-import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
+import { FaCode, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
 import { useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Layout/Spinner';
+import RepoList from '../components/Repos/RepoList';
 import { useParams } from 'react-router-dom';
 import GitHubContext from '../Context/GitHub/GitHubContext';
+import {getUserAndRepos } from '../Context/GitHub/GitHubActions';
 
 const User = () => {
-	const { getUser, user, loading } = useContext(GitHubContext);
+	const { user, loading, repos, dispatch } = useContext(GitHubContext);
 	const params = useParams();
 
 	useEffect(() => {
-		getUser(params.login);
-	}, []);
+		dispatch({ type: 'SET_LOADING' });
+		const getUserData = async () => {
+			const userData = await getUserAndRepos(params.login);
+			dispatch({ type: 'FETCH_USER_AND_REPOS', payload: userData });
+
+		
+		};
+		getUserData();
+	}, [dispatch, params.login]);
+
 	//destructure all these props from user
 	const {
 		name,
@@ -122,7 +132,7 @@ const User = () => {
 
 					<div className="stat">
 						<div className="stat-figure text-secondary">
-							<FaCodepen className="text-3xl md:text-5xl" />
+							<FaCode className="text-3xl md:text-5xl" />
 						</div>
 						<div className="stat-title pr-5">Public Repos</div>
 						<div className="stat-value pr-5 text-3xl md:text-4xl">{public_repos}</div>
@@ -136,6 +146,8 @@ const User = () => {
 						<div className="stat-value pr-5 text-3xl md:text-4xl">{public_gists}</div>
 					</div>
 				</div>
+
+				<RepoList repos={repos} />
 			</div>
 		</>
 	);
