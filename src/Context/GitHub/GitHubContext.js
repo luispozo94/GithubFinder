@@ -13,6 +13,7 @@ export const GitHubProvider = ({ children }) => {
 		repos: [],
 		loading: false,
 	};
+	
 	//destructure the state by passing the initial state and dispatch from the reducer
 	const [state, dispatch] = useReducer(GitHubReducer, initialState);
 

@@ -10,14 +10,13 @@ import {getUserAndRepos } from '../Context/GitHub/GitHubActions';
 const User = () => {
 	const { user, loading, repos, dispatch } = useContext(GitHubContext);
 	const params = useParams();
-
+//some commments 
+//dispatching the action to get the user and repos AND setting the loading state to true
 	useEffect(() => {
-		dispatch({ type: 'SET_LOADING' });
+		dispatch({ type: 'SET_LOADING' });//this will reach the reducer and set the loading state to true
 		const getUserData = async () => {
 			const userData = await getUserAndRepos(params.login);
-			dispatch({ type: 'FETCH_USER_AND_REPOS', payload: userData });
-
-		
+			dispatch({ type: 'FETCH_USER_AND_REPOS', payload: userData });//this will reach the reducer and update the user and repos state
 		};
 		getUserData();
 	}, [dispatch, params.login]);

@@ -2,11 +2,12 @@ import axios from 'axios';
 const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
+//GithubActions is handling all the get requests to the github api
+
 const github = axios.create({
 	baseURL: GITHUB_URL,
 	headers: { Authorization: `token ${GITHUB_TOKEN}` },
 });
-//GithubActions is handling all the actions that are being dispatched to the reducer
 
 //created a func to get search results
 export const searchUsers = async (text) => {
