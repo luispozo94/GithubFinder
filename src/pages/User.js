@@ -21,7 +21,7 @@ const User = () => {
 		};
 		getUserData();
 	}, [dispatch, params.login]);
-
+//adding comments
 	//destructure all these props from user
 	const {
 		name,
